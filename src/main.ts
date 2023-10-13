@@ -21,11 +21,11 @@ counterDisplay.innerHTML = `${counter} cake slices`;
 app.append(counterDisplay);
 
 button.addEventListener("click", () => {
-    counter++;
-    counterDisplay.innerHTML = `${counter} cake slices`;
+  counter++;
+  counterDisplay.innerHTML = `${counter} cake slices`;
 });
 
 setInterval(() => {
-    counter++;
-    counterDisplay.innerHTML = `${counter} cake slices`;
+  counter++;
+  counterDisplay.innerHTML = `${counter} cake slices`;
 }, 1000);
