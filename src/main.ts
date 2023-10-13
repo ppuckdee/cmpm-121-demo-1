@@ -13,3 +13,14 @@ app.append(header);
 const button = document.createElement("button");
 button.innerHTML = "🍰";
 app.append(button);
+
+let counter: number = 0;
+
+const counterDisplay = document.createElement("div");
+counterDisplay.innerHTML = `${counter} cake slices`;
+app.append(counterDisplay);
+
+button.addEventListener("click", () => {
+  counter++;
+  counterDisplay.innerHTML = `${counter} cake slices`;
+});
