@@ -22,8 +22,13 @@ const counterDisplay = document.createElement("div");
 counterDisplay.innerHTML = `${counter} cake slices`;
 app.append(counterDisplay);
 
-button.addEventListener("click", () => {
+function updateCounter() {
   counter += 1 / fps;
+  counterDisplay.innerHTML = `${counter.toFixed(2)} cake slices`;
+}
+
+button.addEventListener("click", () => {
+  counter += 1;
   counterDisplay.innerHTML = `${counter.toFixed(2)} cake slices`;
 });
 
@@ -33,9 +38,9 @@ function tick(millis: number) {
 
   if (delta > 0) {
     fps = Math.round(1000 / delta);
-    console.log(`FPS: ${fps}`);
   }
 
+  updateCounter();
   requestAnimationFrame(tick);
 }
 
