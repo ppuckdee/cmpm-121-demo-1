@@ -10,26 +10,45 @@ const header = document.createElement("h1");
 header.innerHTML = gameName;
 app.append(header);
 
+const counterDisplay = document.createElement("div");
+counterDisplay.innerHTML = "0 cake slices";
+app.append(counterDisplay);
+
 const button = document.createElement("button");
 button.innerHTML = "🍰";
 app.append(button);
 
+const upgradeButton = document.createElement("button");
+upgradeButton.innerHTML = "Purchase Upgrade (Cost: 10 cake slices)";
+upgradeButton.disabled = true;
+app.append(upgradeButton);
+
 let counter: number = 0;
+let growthRate: number = 0;
 let lastMillis = 0;
 let fps = 60;
 
-const counterDisplay = document.createElement("div");
-counterDisplay.innerHTML = `${counter} cake slices`;
-app.append(counterDisplay);
-
 function updateCounter() {
-  counter += 1 / fps;
+  counter += growthRate / fps;
   counterDisplay.innerHTML = `${counter.toFixed(2)} cake slices`;
+
+  if (counter >= 10) {
+    upgradeButton.disabled = false;
+  }
 }
 
 button.addEventListener("click", () => {
   counter += 1;
-  counterDisplay.innerHTML = `${counter.toFixed(2)} cake slices`;
+  updateCounter();
+});
+
+upgradeButton.addEventListener("click", () => {
+  if (counter >= 10) {
+    counter -= 10;
+    growthRate += 1;
+    upgradeButton.innerHTML = `Purchase Upgrade (Cost: 10 cake slices)`;
+    updateCounter();
+  }
 });
 
 function tick(millis: number) {
