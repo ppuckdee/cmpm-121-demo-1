@@ -4,6 +4,7 @@ interface Item {
   name: string;
   cost: number;
   rate: number;
+  description: string;
 }
 
 const app: HTMLDivElement = document.querySelector("#app")!;
@@ -20,9 +21,31 @@ counterDisplay.innerHTML = `${counter.toFixed(2)} cakes`;
 app.append(counterDisplay);
 
 const availableItems: Item[] = [
-  { name: "🍰", cost: 10, rate: 0.1 },
-  { name: "👩‍🍳", cost: 100, rate: 2 },
-  { name: "🏠", cost: 1000, rate: 50 },
+  {
+    name: "🍰",
+    cost: 10,
+    rate: 0.1,
+    description: "Bakes delicious cake slices",
+  },
+  {
+    name: "👩‍🍳",
+    cost: 100,
+    rate: 2,
+    description: "Hires a chef to bake cake slices",
+  },
+  { name: "🏠", cost: 1000, rate: 50, description: "Opens up one bakery" },
+  {
+    name: "🧁",
+    cost: 5000,
+    rate: 200,
+    description: "Adds cupcakes to Bakery menu",
+  },
+  {
+    name: "🎂",
+    cost: 25000,
+    rate: 1000,
+    description: "Sells whole cakes for distribution",
+  },
 ];
 
 const upgradeButtons: HTMLButtonElement[] = [];
@@ -59,7 +82,7 @@ function createUpgradeButton(item: Item) {
   const upgradeButton = document.createElement("button");
   upgradeButton.innerHTML = `Purchase ${item.name} (Cost: ${item.cost.toFixed(
     2,
-  )} ${availableItems[0].name}s)`;
+  )} ${availableItems[0].name}s) - ${item.description}`;
   upgradeButton.addEventListener("click", () => {
     if (counter >= item.cost) {
       counter -= item.cost;
@@ -93,7 +116,7 @@ function updateItemCountsDisplay() {
 function updateUpgradeButtonLabel(button: HTMLButtonElement, item: Item) {
   button.innerHTML = `Purchase ${item.name} (Cost: ${item.cost.toFixed(2)} ${
     availableItems[0].name
-  }s)`;
+  }s) - ${item.description}`;
 }
 
 function getItemCountsDisplayText() {
