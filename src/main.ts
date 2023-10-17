@@ -11,7 +11,8 @@ header.innerHTML = gameName;
 app.append(header);
 
 const counterDisplay = document.createElement("div");
-counterDisplay.innerHTML = "0 cake slices";
+let counter = 0;
+counterDisplay.innerHTML = `${counter.toFixed(2)} cake slices`;
 app.append(counterDisplay);
 
 const button = document.createElement("button");
@@ -24,7 +25,6 @@ const upgradeButtonC = createUpgradeButton("C", 1000, 50, 100);
 
 app.append(upgradeButtonA, upgradeButtonB, upgradeButtonC);
 
-let counter: number = 0;
 let growthRate: number = 0.1;
 let lastMillis = 0;
 let fps = 60;
@@ -51,6 +51,8 @@ const itemCountsDisplay = document.createElement("div");
 itemCountsDisplay.innerHTML = `Items Purchased: A: ${purchasedItems.A}, B: ${purchasedItems.B}, C: ${purchasedItems.C}`;
 app.append(itemCountsDisplay);
 
+const itemCostMultiplier: number = 1.15;
+
 function createUpgradeButton(
   itemName: string,
   cost: number,
@@ -58,7 +60,9 @@ function createUpgradeButton(
   maxRate: number,
 ) {
   const upgradeButton = document.createElement("button");
-  upgradeButton.innerHTML = `Purchase ${itemName} (Cost: ${cost} cake slices)`;
+  upgradeButton.innerHTML = `Purchase ${itemName} (Cost: ${cost.toFixed(
+    2,
+  )} cake slices)`;
   upgradeButton.addEventListener("click", () => {
     if (counter >= cost) {
       counter -= cost;
@@ -66,11 +70,12 @@ function createUpgradeButton(
       if (growthRate > maxRate) {
         growthRate = maxRate;
       }
-      updateGrowthRateDisplay();
       purchasedItems[itemName as keyof PurchasedItems]++;
-      updateItemCountsDisplay();
+      cost *= itemCostMultiplier;
       updateUpgradeButtonLabel(upgradeButton, itemName, cost);
       updateCounter();
+      updateGrowthRateDisplay();
+      updateItemCountsDisplay();
     }
   });
   return upgradeButton;
@@ -96,7 +101,9 @@ function updateUpgradeButtonLabel(
   itemName: string,
   cost: number,
 ) {
-  button.innerHTML = `Purchase ${itemName} (Cost: ${cost} cake slices)`;
+  button.innerHTML = `Purchase ${itemName} (Cost: ${cost.toFixed(
+    2,
+  )} cake slices)`;
 }
 
 function tick(millis: number) {
