@@ -88,9 +88,8 @@ function createMainButton() {
 
 function createUpgradeButton(item: Item) {
   const upgradeButton = document.createElement("button");
-  upgradeButton.innerHTML = `Purchase 🍰 (Cost: ${item.cost.toFixed(
-    2,
-  )} 🍰s) - ${item.description}`;
+  const costInCakes = item.cost.toFixed(2) + " 🍰s";
+  upgradeButton.innerHTML = `Purchase ${item.name} (Cost: ${costInCakes}) - ${item.description}`;
   upgradeButton.addEventListener("click", () => {
     if (counter >= item.cost) {
       counter -= item.cost;
@@ -111,11 +110,7 @@ function updateCounter() {
   counterDisplay.innerHTML = `${counter.toFixed(2)} ${availableItems[0].name}s`;
 
   upgradeButtons.forEach((button, index) => {
-    if (index < availableItems.length - 1) {
-      button.disabled = counter < availableItems[index].cost;
-    } else {
-      button.disabled = counter < availableItems[index].cost;
-    }
+    button.disabled = counter < availableItems[index].cost;
   });
 }
 
