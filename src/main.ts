@@ -1,9 +1,7 @@
 import "./style.css";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
-
 const gameName = "Nick's cake game";
-
 document.title = gameName;
 
 const header = document.createElement("h1");
@@ -12,17 +10,16 @@ app.append(header);
 
 const counterDisplay = document.createElement("div");
 let counter = 0;
-counterDisplay.innerHTML = `${counter.toFixed(2)} cake slices`;
+counterDisplay.innerHTML = `${counter.toFixed(2)} cakes`;
 app.append(counterDisplay);
 
 const button = document.createElement("button");
 button.innerHTML = "🍰";
 app.append(button);
 
-const upgradeButtonA = createUpgradeButton("A", 10, 0.1, 1);
-const upgradeButtonB = createUpgradeButton("B", 100, 2.0, 10);
-const upgradeButtonC = createUpgradeButton("C", 1000, 50, 100);
-
+const upgradeButtonA = createUpgradeButton("🎂", 10, 0.1, 1);
+const upgradeButtonB = createUpgradeButton("👩‍🍳", 100, 2.0, 10);
+const upgradeButtonC = createUpgradeButton("🏠", 1000, 50, 100);
 app.append(upgradeButtonA, upgradeButtonB, upgradeButtonC);
 
 let growthRate: number = 0.1;
