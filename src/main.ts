@@ -20,13 +20,11 @@ let counter = 0;
 counterDisplay.innerHTML = `${counter.toFixed(2)} cakes`;
 app.append(counterDisplay);
 
+const mainButton = createMainButton();
+app.append(mainButton);
+
 const availableItems: Item[] = [
-  {
-    name: "🍰",
-    cost: 10,
-    rate: 0.1,
-    description: "Sells one cake slice",
-  },
+  { name: "🍰", cost: 10, rate: 0.1, description: "Sells one cake slice" },
   {
     name: "👩‍🍳",
     cost: 100,
@@ -56,7 +54,7 @@ availableItems.forEach((item) => {
   app.append(upgradeButton);
 });
 
-let growthRate: number = 0.1;
+let growthRate: number = 0;
 let lastMillis = 0;
 let fps = 60;
 
@@ -78,11 +76,21 @@ app.append(itemCountsDisplay);
 
 const itemCostMultiplier: number = 1.15;
 
+function createMainButton() {
+  const mainButton = document.createElement("button");
+  mainButton.innerHTML = "Click to Bake a Cake";
+  mainButton.addEventListener("click", () => {
+    counter += 1;
+    updateCounter();
+  });
+  return mainButton;
+}
+
 function createUpgradeButton(item: Item) {
   const upgradeButton = document.createElement("button");
   upgradeButton.innerHTML = `Purchase ${item.name} (Cost: ${item.cost.toFixed(
     2,
-  )} ${availableItems[0].name}s) - ${item.description}`;
+  )} ${item.name}s) - ${item.description}`;
   upgradeButton.addEventListener("click", () => {
     if (counter >= item.cost) {
       counter -= item.cost;
@@ -101,6 +109,14 @@ function createUpgradeButton(item: Item) {
 function updateCounter() {
   counter += growthRate / fps;
   counterDisplay.innerHTML = `${counter.toFixed(2)} ${availableItems[0].name}s`;
+
+  upgradeButtons.forEach((button, index) => {
+    if (index < availableItems.length - 1) {
+      button.disabled = counter < availableItems[index].cost;
+    } else {
+      button.disabled = counter < availableItems[index].cost;
+    }
+  });
 }
 
 function updateGrowthRateDisplay() {
@@ -115,7 +131,7 @@ function updateItemCountsDisplay() {
 
 function updateUpgradeButtonLabel(button: HTMLButtonElement, item: Item) {
   button.innerHTML = `Purchase ${item.name} (Cost: ${item.cost.toFixed(2)} ${
-    availableItems[0].name
+    item.name
   }s) - ${item.description}`;
 }
 
