@@ -88,9 +88,9 @@ function createMainButton() {
 
 function createUpgradeButton(item: Item) {
   const upgradeButton = document.createElement("button");
-  upgradeButton.innerHTML = `Purchase ${item.name} (Cost: ${item.cost.toFixed(
+  upgradeButton.innerHTML = `Purchase 🍰 (Cost: ${item.cost.toFixed(
     2,
-  )} ${item.name}s) - ${item.description}`;
+  )} 🍰s) - ${item.description}`;
   upgradeButton.addEventListener("click", () => {
     if (counter >= item.cost) {
       counter -= item.cost;
