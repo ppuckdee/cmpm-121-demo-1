@@ -18,38 +18,86 @@ const button = document.createElement("button");
 button.innerHTML = "🍰";
 app.append(button);
 
-const upgradeButton = document.createElement("button");
-upgradeButton.innerHTML = "Purchase Upgrade (Cost: 10 cake slices)";
-upgradeButton.disabled = true;
-app.append(upgradeButton);
+const upgradeButtonA = createUpgradeButton("A", 10, 0.1, 1);
+const upgradeButtonB = createUpgradeButton("B", 100, 2.0, 10);
+const upgradeButtonC = createUpgradeButton("C", 1000, 50, 100);
+
+app.append(upgradeButtonA, upgradeButtonB, upgradeButtonC);
 
 let counter: number = 0;
-let growthRate: number = 0;
+let growthRate: number = 0.1;
 let lastMillis = 0;
 let fps = 60;
+
+interface PurchasedItems {
+  A: number;
+  B: number;
+  C: number;
+}
+
+const purchasedItems: PurchasedItems = {
+  A: 0,
+  B: 0,
+  C: 0,
+};
+
+const growthRateDisplay = document.createElement("div");
+growthRateDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(
+  1,
+)} cake slices/sec`;
+app.append(growthRateDisplay);
+
+const itemCountsDisplay = document.createElement("div");
+itemCountsDisplay.innerHTML = `Items Purchased: A: ${purchasedItems.A}, B: ${purchasedItems.B}, C: ${purchasedItems.C}`;
+app.append(itemCountsDisplay);
+
+function createUpgradeButton(
+  itemName: string,
+  cost: number,
+  itemRate: number,
+  maxRate: number,
+) {
+  const upgradeButton = document.createElement("button");
+  upgradeButton.innerHTML = `Purchase ${itemName} (Cost: ${cost} cake slices)`;
+  upgradeButton.addEventListener("click", () => {
+    if (counter >= cost) {
+      counter -= cost;
+      growthRate += itemRate;
+      if (growthRate > maxRate) {
+        growthRate = maxRate;
+      }
+      updateGrowthRateDisplay();
+      purchasedItems[itemName as keyof PurchasedItems]++;
+      updateItemCountsDisplay();
+      updateUpgradeButtonLabel(upgradeButton, itemName, cost);
+      updateCounter();
+    }
+  });
+  return upgradeButton;
+}
 
 function updateCounter() {
   counter += growthRate / fps;
   counterDisplay.innerHTML = `${counter.toFixed(2)} cake slices`;
-
-  if (counter >= 10) {
-    upgradeButton.disabled = false;
-  }
 }
 
-button.addEventListener("click", () => {
-  counter += 1;
-  updateCounter();
-});
+function updateGrowthRateDisplay() {
+  growthRateDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(
+    1,
+  )} cake slices/sec`;
+}
 
-upgradeButton.addEventListener("click", () => {
-  if (counter >= 10) {
-    counter -= 10;
-    growthRate += 1;
-    upgradeButton.innerHTML = `Purchase Upgrade (Cost: 10 cake slices)`;
-    updateCounter();
-  }
-});
+function updateItemCountsDisplay() {
+  itemCountsDisplay.innerHTML = `Items Purchased: A: ${purchasedItems.A}, B: ${purchasedItems.B}, C: ${purchasedItems.C}`;
+}
+
+function updateUpgradeButtonLabel(
+  button: HTMLButtonElement,
+  itemName: string,
+  cost: number,
+) {
+  button.innerHTML = `Purchase ${itemName} (Cost: ${cost} cake slices)`;
+}
 
 function tick(millis: number) {
   const delta = millis - lastMillis;
