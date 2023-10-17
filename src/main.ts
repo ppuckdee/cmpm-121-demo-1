@@ -25,15 +25,15 @@ const availableItems: Item[] = [
     name: "🍰",
     cost: 10,
     rate: 0.1,
-    description: "Bakes delicious cake slices",
+    description: "Sells one cake slice",
   },
   {
     name: "👩‍🍳",
     cost: 100,
     rate: 2,
-    description: "Hires a chef to bake cake slices",
+    description: "Hires chef for faster production",
   },
-  { name: "🏠", cost: 1000, rate: 50, description: "Opens up one bakery" },
+  { name: "🏠", cost: 1000, rate: 50, description: "Opens up bakery" },
   {
     name: "🧁",
     cost: 5000,
@@ -44,7 +44,7 @@ const availableItems: Item[] = [
     name: "🎂",
     cost: 25000,
     rate: 1000,
-    description: "Sells whole cakes for distribution",
+    description: "Opens up cake distribution center",
   },
 ];
 
