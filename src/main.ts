@@ -1,5 +1,11 @@
 import "./style.css";
 
+interface Item {
+  name: string;
+  cost: number;
+  rate: number;
+}
+
 const app: HTMLDivElement = document.querySelector("#app")!;
 const gameName = "Nick's cake game";
 document.title = gameName;
@@ -13,63 +19,54 @@ let counter = 0;
 counterDisplay.innerHTML = `${counter.toFixed(2)} cakes`;
 app.append(counterDisplay);
 
-const button = document.createElement("button");
-button.innerHTML = "🍰";
-app.append(button);
+const availableItems: Item[] = [
+  { name: "🍰", cost: 10, rate: 0.1 },
+  { name: "👩‍🍳", cost: 100, rate: 2 },
+  { name: "🏠", cost: 1000, rate: 50 },
+];
 
-const upgradeButtonA = createUpgradeButton("🎂", 10, 0.1, 1);
-const upgradeButtonB = createUpgradeButton("👩‍🍳", 100, 2.0, 10);
-const upgradeButtonC = createUpgradeButton("🏠", 1000, 50, 100);
-app.append(upgradeButtonA, upgradeButtonB, upgradeButtonC);
+const upgradeButtons: HTMLButtonElement[] = [];
+
+availableItems.forEach((item) => {
+  const upgradeButton = createUpgradeButton(item);
+  upgradeButtons.push(upgradeButton);
+  app.append(upgradeButton);
+});
 
 let growthRate: number = 0.1;
 let lastMillis = 0;
 let fps = 60;
 
-interface PurchasedItems {
-  A: number;
-  B: number;
-  C: number;
-}
+const purchasedItems: { [key: string]: number } = {};
 
-const purchasedItems: PurchasedItems = {
-  A: 0,
-  B: 0,
-  C: 0,
-};
+availableItems.forEach((item) => {
+  purchasedItems[item.name] = 0;
+});
 
 const growthRateDisplay = document.createElement("div");
-growthRateDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(
-  1,
-)} cake slices/sec`;
+growthRateDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(1)} ${
+  availableItems[0].name
+}s/sec`;
 app.append(growthRateDisplay);
 
 const itemCountsDisplay = document.createElement("div");
-itemCountsDisplay.innerHTML = `Items Purchased: A: ${purchasedItems.A}, B: ${purchasedItems.B}, C: ${purchasedItems.C}`;
+itemCountsDisplay.innerHTML = `Items Purchased: ${getItemCountsDisplayText()}`;
 app.append(itemCountsDisplay);
 
 const itemCostMultiplier: number = 1.15;
 
-function createUpgradeButton(
-  itemName: string,
-  cost: number,
-  itemRate: number,
-  maxRate: number,
-) {
+function createUpgradeButton(item: Item) {
   const upgradeButton = document.createElement("button");
-  upgradeButton.innerHTML = `Purchase ${itemName} (Cost: ${cost.toFixed(
+  upgradeButton.innerHTML = `Purchase ${item.name} (Cost: ${item.cost.toFixed(
     2,
-  )} cake slices)`;
+  )} ${availableItems[0].name}s)`;
   upgradeButton.addEventListener("click", () => {
-    if (counter >= cost) {
-      counter -= cost;
-      growthRate += itemRate;
-      if (growthRate > maxRate) {
-        growthRate = maxRate;
-      }
-      purchasedItems[itemName as keyof PurchasedItems]++;
-      cost *= itemCostMultiplier;
-      updateUpgradeButtonLabel(upgradeButton, itemName, cost);
+    if (counter >= item.cost) {
+      counter -= item.cost;
+      growthRate += item.rate;
+      purchasedItems[item.name]++;
+      item.cost *= itemCostMultiplier;
+      updateUpgradeButtonLabel(upgradeButton, item);
       updateCounter();
       updateGrowthRateDisplay();
       updateItemCountsDisplay();
@@ -80,27 +77,29 @@ function createUpgradeButton(
 
 function updateCounter() {
   counter += growthRate / fps;
-  counterDisplay.innerHTML = `${counter.toFixed(2)} cake slices`;
+  counterDisplay.innerHTML = `${counter.toFixed(2)} ${availableItems[0].name}s`;
 }
 
 function updateGrowthRateDisplay() {
-  growthRateDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(
-    1,
-  )} cake slices/sec`;
+  growthRateDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(1)} ${
+    availableItems[0].name
+  }s/sec`;
 }
 
 function updateItemCountsDisplay() {
-  itemCountsDisplay.innerHTML = `Items Purchased: A: ${purchasedItems.A}, B: ${purchasedItems.B}, C: ${purchasedItems.C}`;
+  itemCountsDisplay.innerHTML = `Items Purchased: ${getItemCountsDisplayText()}`;
 }
 
-function updateUpgradeButtonLabel(
-  button: HTMLButtonElement,
-  itemName: string,
-  cost: number,
-) {
-  button.innerHTML = `Purchase ${itemName} (Cost: ${cost.toFixed(
-    2,
-  )} cake slices)`;
+function updateUpgradeButtonLabel(button: HTMLButtonElement, item: Item) {
+  button.innerHTML = `Purchase ${item.name} (Cost: ${item.cost.toFixed(2)} ${
+    availableItems[0].name
+  }s)`;
+}
+
+function getItemCountsDisplayText() {
+  return availableItems
+    .map((item) => `${item.name}: ${purchasedItems[item.name]}`)
+    .join(", ");
 }
 
 function tick(millis: number) {
